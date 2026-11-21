@@ -39,14 +39,21 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Mount Routes
+// Mount Routes (both /api and base paths for seamless Netlify Serverless Function support)
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
 app.use('/api/employees', employeeRoutes);
+app.use('/employees', employeeRoutes);
 app.use('/api/departments', departmentRoutes);
+app.use('/departments', departmentRoutes);
 app.use('/api/attendance', attendanceRoutes);
+app.use('/attendance', attendanceRoutes);
 app.use('/api/leaves', leaveRoutes);
+app.use('/leaves', leaveRoutes);
 app.use('/api/payroll', payrollRoutes);
+app.use('/payroll', payrollRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/reports', reportRoutes);
 
 // 404 handler for unknown routes
 app.use('*', (req, res) => {
@@ -59,11 +66,16 @@ app.use('*', (req, res) => {
 // Central Error Handling Middleware
 app.use(errorHandler);
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`====================================================`);
-  console.log(`🚀 WorkSphere Backend Server running on port ${PORT}`);
-  console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
-  console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`====================================================`);
-});
+// Start Server when run directly
+if (process.env.NETLIFY !== 'true' && !process.env.LAMBDA_TASK_ROOT) {
+  app.listen(PORT, () => {
+    console.log(`====================================================`);
+    console.log(`🚀 WorkSphere Backend Server running on port ${PORT}`);
+    console.log(`🌐 API Base URL: http://localhost:${PORT}/api`);
+    console.log(`🩺 Health check: http://localhost:${PORT}/api/health`);
+    console.log(`====================================================`);
+  });
+}
+
+module.exports = app;
+
