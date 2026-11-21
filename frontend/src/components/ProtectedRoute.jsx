@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 
 const ProtectedRoute = ({ allowedRoles = [], pageTitle = 'WorkSphere' }) => {
   const { user, loading, hasRole, isAuthenticated } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (loading) {
     return (
@@ -22,9 +23,9 @@ const ProtectedRoute = ({ allowedRoles = [], pageTitle = 'WorkSphere' }) => {
   if (allowedRoles.length > 0 && !hasRole(allowedRoles)) {
     return (
       <div className="app-container">
-        <Sidebar />
+        <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
         <div className="main-wrapper">
-          <Navbar pageTitle="Access Restricted" />
+          <Navbar pageTitle="Access Restricted" onToggleSidebar={() => setSidebarOpen(prev => !prev)} />
           <div className="page-content">
             <div className="card" style={{ textAlign: 'center', padding: '60px 20px' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#ef4444', marginBottom: 12 }}>
@@ -45,9 +46,9 @@ const ProtectedRoute = ({ allowedRoles = [], pageTitle = 'WorkSphere' }) => {
 
   return (
     <div className="app-container">
-      <Sidebar />
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <div className="main-wrapper">
-        <Navbar pageTitle={pageTitle} />
+        <Navbar pageTitle={pageTitle} onToggleSidebar={() => setSidebarOpen(prev => !prev)} />
         <main className="page-content">
           <Outlet />
         </main>

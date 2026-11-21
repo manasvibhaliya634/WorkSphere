@@ -10,10 +10,11 @@ import {
   Receipt,
   BarChart3,
   LogOut,
-  ShieldCheck
+  ShieldCheck,
+  X
 } from 'lucide-react';
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen = false, onClose }) => {
   const { user, logout, hasRole } = useAuth();
 
   const navItems = [
@@ -62,64 +63,82 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="sidebar">
-      {/* Brand Header */}
-      <div className="sidebar-header">
-        <div className="brand-logo">
-          <ShieldCheck size={20} />
-        </div>
-        <div>
-          <span style={{ letterSpacing: '-0.02em' }}>WorkSphere</span>
-          <span style={{ fontSize: '0.65rem', display: 'block', color: '#60a5fa', fontWeight: 500 }}>
-            HRMS ENTERPRISE
-          </span>
-        </div>
-      </div>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {isOpen && <div className="sidebar-backdrop" onClick={onClose} />}
 
-      {/* Navigation */}
-      <nav className="sidebar-nav">
-        <div className="nav-section-title">Core Management</div>
-        {navItems.filter(item => item.show).map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-            >
-              <Icon size={18} />
-              <span>{item.label}</span>
-            </NavLink>
-          );
-        })}
-      </nav>
-
-      {/* Footer Profile & Logout */}
-      <div className="sidebar-footer">
-        <div className="user-quick-card">
-          <img
-            src={user?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
-            alt="Profile"
-            style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }}
-          />
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ color: '#ffffff', fontSize: '0.8125rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-              {user?.first_name} {user?.last_name}
+      <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+        {/* Brand Header */}
+        <div className="sidebar-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
+            <div className="brand-logo">
+              <ShieldCheck size={20} />
             </div>
-            <span className={`badge badge-${user?.role}`} style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
-              {user?.role}
-            </span>
+            <div>
+              <span style={{ letterSpacing: '-0.02em', display: 'block', lineHeight: 1.2 }}>WorkSphere</span>
+              <span style={{ fontSize: '0.65rem', display: 'block', color: '#60a5fa', fontWeight: 500 }}>
+                HRMS ENTERPRISE
+              </span>
+            </div>
           </div>
+
+          {/* Close X Button (Visible on mobile/tablet drawer) */}
           <button
-            onClick={logout}
-            title="Log Out"
-            style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+            type="button"
+            className="mobile-close-btn"
+            onClick={onClose}
+            title="Close Menu"
           >
-            <LogOut size={16} />
+            <X size={18} />
           </button>
         </div>
-      </div>
-    </aside>
+
+        {/* Navigation */}
+        <nav className="sidebar-nav">
+          <div className="nav-section-title">Core Management</div>
+          {navItems.filter(item => item.show).map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                onClick={onClose}
+                className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+              >
+                <Icon size={18} />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
+        </nav>
+
+        {/* Footer Profile & Logout */}
+        <div className="sidebar-footer">
+          <div className="user-quick-card">
+            <img
+              src={user?.avatar_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}
+              alt="Profile"
+              style={{ width: 36, height: 36, borderRadius: '50%', objectFit: 'cover' }}
+            />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ color: '#ffffff', fontSize: '0.8125rem', fontWeight: 600, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {user?.first_name} {user?.last_name}
+              </div>
+              <span className={`badge badge-${user?.role}`} style={{ fontSize: '0.65rem', padding: '1px 6px' }}>
+                {user?.role}
+              </span>
+            </div>
+            <button
+              onClick={logout}
+              title="Log Out"
+              style={{ background: 'transparent', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: 4 }}
+            >
+              <LogOut size={16} />
+            </button>
+          </div>
+        </div>
+      </aside>
+    </>
   );
 };
 

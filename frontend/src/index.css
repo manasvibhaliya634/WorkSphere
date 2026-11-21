@@ -45,6 +45,7 @@ body {
   color: var(--text-main);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* Scrollbar Styling */
@@ -73,6 +74,7 @@ body {
   font-size: 0.75rem;
   font-weight: 600;
   text-transform: capitalize;
+  white-space: nowrap;
 }
 
 .badge-present, .badge-active, .badge-approved, .badge-paid {
@@ -137,6 +139,7 @@ body {
   transition: all 0.2s ease;
   border: 1px solid transparent;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 .btn-primary {
@@ -219,10 +222,11 @@ body {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
-/* Tables */
+/* Responsive Table Container */
 .table-responsive {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .table {
@@ -230,6 +234,7 @@ body {
   border-collapse: collapse;
   text-align: left;
   font-size: 0.875rem;
+  min-width: 600px;
 }
 
 .table th {
@@ -241,6 +246,7 @@ body {
   letter-spacing: 0.05em;
   padding: 12px 16px;
   border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
 }
 
 .table td {
@@ -254,7 +260,7 @@ body {
   background-color: #f8fafc;
 }
 
-/* Modal Overlay & Container */
+/* Modal Overlay & Responsive Container */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -264,7 +270,7 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 999;
-  padding: 20px;
+  padding: 16px;
 }
 
 .modal-content {
@@ -291,5 +297,20 @@ body {
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@media (max-width: 640px) {
+  .modal-content {
+    max-width: 95vw !important;
+    border-radius: var(--radius-md);
+  }
+  .modal-content > div:last-child {
+    padding: 16px !important;
   }
 }
